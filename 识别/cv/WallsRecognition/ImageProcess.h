@@ -5,13 +5,20 @@
 #include "cv.h"
 #include "cxcore.h"
 #include "highgui.h" 
-
+ #include <algorithm>
+#include <functional>
 
 typedef struct
 {
 	double x1,y1;
 	double x2,y2;
 }line;
+
+typedef struct
+{
+	double x,y;
+	int length;
+}door;
 
 class ImageProcess
 {
@@ -27,6 +34,7 @@ private:
 	int minLineLength; //线段的最小长度
 
 	vector<line> walls;
+	vector<door> v;
 
 	uchar * pixel(IplImage * img, int x, int y)      //取像素值
 	{ return (uchar*)(img->imageData+y*img->widthStep+x*img->nChannels);}
@@ -46,6 +54,14 @@ public:
 	vector<line>::iterator vec_begin() { return walls.begin();}
 	vector<line>::iterator vec_end() { return walls.end();}
 
+	//
+	vector<door>::const_iterator iter1;
+	vector<door>::iterator flag;
+	vector<door>::iterator vec_begin1() { return v.begin();}
+	vector<door>::iterator vec_end1() { return v.end();}
+	int max;
+
+
 	ImageProcess();
 	~ImageProcess();
 
@@ -57,9 +73,10 @@ public:
 	void setMaxSeek(int s) {maxSeek = s;}
 	void setminLineLength(int l) {minLineLength = l;}
 	const IplImage * getSrcImage() { return (const IplImage * )src;}
-	const IplImage * getPreImage() { return (const IplImage * )preImg;}
+	 IplImage * getPreImage() { return ( IplImage * )preImg;}
 
 	void processImage(const char * imgfile, const char * xmlfile);
+	void findDoor(vector<line> w);
 };
 
 #endif

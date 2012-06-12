@@ -220,7 +220,52 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		p2.y=(*ImgPro->iter).y2;
 		cvLine( img, p1, p2, CV_RGB(255,0,0), 2, CV_AA, 0 );
 	}
-	//Process.Start( "IEXPLORE.EXE ","lines.xml ");
+
+	for(ImgPro->iter1=ImgPro->vec_begin1(); ImgPro->iter1!=ImgPro->vec_end1(); ++ImgPro->iter1)
+	{
+		CvPoint p;
+		p.x=(*ImgPro->iter1).x;
+		p.y=(*ImgPro->iter1).y;
+		int radius=(int)((*ImgPro->iter1).length/2.0);
+		CString s;
+		s.Format(L"%d,%d",p.x,p.y);
+		if(radius<0)
+		{
+		MessageBox(s);
+		cvCircle(img, p, -radius, CV_RGB(255,0,0),
+               1, 8, 0 );
+		}
+		else if(radius==0)
+			MessageBox(_T("Error! =0."));
+		else 
+		cvCircle(img, p, radius, CV_RGB(255,0,0),
+               1, 8, 0 );
+	}
+	
+	/*for(ImgPro->iter1=ImgPro->flag-ImgPro->max; ImgPro->iter1!=ImgPro->flag; ++ImgPro->iter1)
+	{
+		CvPoint p;
+		p.x=(*ImgPro->iter1).x;
+		p.y=(*ImgPro->iter1).y;
+		int radius=(int)((*ImgPro->iter1).length/2.0);
+		cvCircle(img, p, radius, CV_RGB(255,0,0),
+               1, 8, 0 );
+	}*/
+    
+   //
+	CvMemStorage* storage = cvCreateMemStorage(0);
+    CvSeq* lines = 0;
+	 IplImage* dst;
+	  dst = cvCreateImage( cvGetSize(ImgPro->getPreImage()), 8, 1 );
+	  cvCanny( ImgPro->getPreImage(), dst, 50, 200, 3 );
+	lines = cvHoughLines2( dst, storage, CV_HOUGH_PROBABILISTIC, 1, CV_PI/180, 50, 50, 10 );
+    for( int i = 0; i < lines->total; i++ )
+    {
+        CvPoint* line = (CvPoint*)cvGetSeqElem(lines,i);
+		if(line[0].x!=line[1].x&&line[0].y!=line[1].y)
+        cvLine( img, line[0], line[1], CV_RGB(255,0,0), 3, CV_AA, 0 );
+    }
+
 	cvNamedWindow("Result",1);
 	cvShowImage("Result",img);
 	cvNamedWindow("preImg",1);
@@ -229,3 +274,4 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 	cvDestroyWindow("Result");
 	cvDestroyWindow("preImg");
 }
+

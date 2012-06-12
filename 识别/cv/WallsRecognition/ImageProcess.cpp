@@ -398,8 +398,6 @@ void ImageProcess::recognition(IplImage * img)
 		}
 		delete [] remove;
 
-		//delete [] xColle;
-		//delete [] yColle;
 }
 
 void ImageProcess::writeToXML(vector<line> w,const char * filename)
@@ -439,8 +437,119 @@ void ImageProcess::processImage(const char * imgfile, const char * xmlfile)
 	//edge(preImg,edgeImg);
 	//recognition(edgeImg);
 	recognition(preImg);
-
+	findDoor(walls);
 	writeToXML(walls,xmlfile);
 	//cvReleaseImage(&edgeImg);
 	//cvReleaseImage(&preImg);
 }
+
+  bool   lessmark(const   door&   s1,const   door&   s2)   
+  {   
+      return   s1.length   <   s2.length;   
+  } 
+
+  bool   greatermark(const   door&   s1,const   door&   s2)   
+  {   
+      return   s1.length   >   s2.length;   
+  }
+
+   bool   lessX(const   line&   s1,const   line&   s2)   
+  {   
+      return   s1.x1   <   s2.x1;   
+  }
+
+    bool   lessY(const   line&   s1,const   line&   s2)   
+  {   
+      return   s1.y1   <   s2.y1;   
+  }
+
+void ImageProcess::findDoor(vector<line> w)
+{
+	int tempL=0;
+	int tempId=0;
+	int count=0;
+	int maxL=0;
+	door pos;
+	int brk=0;
+	vector<line>::iterator it;
+	for(it=w.begin();it!=w.end();it++)
+	{
+		if(it->y1!=it->y2)
+			break;
+		brk++;
+	}
+	//sort
+	int trace=0;
+	int i;
+	 for(i=0;i<brk-1;i++)
+	{
+		while(i<brk-1&&abs(w[i+1].y1-w[i].y1)<3)
+		{trace++;
+		 i++;
+		}
+		sort(w.begin()+i-trace,w.begin()+i+1,lessX);
+		trace=0;
+	}
+
+	for(;i<w.size()-1;i++)
+	{
+		while(i<w.size()-1&&abs(w[i+1].x1-w[i].x1)<3)
+		{trace++;
+		 i++;
+		}
+		sort(w.begin()+i-trace,w.begin()+i+1,lessY);
+		trace=0;
+	}
+	//
+	for(int i=0;i<brk-1;i++)
+	{
+				if(abs(w[i].y1-w[i+1].y1)<3)
+				{
+					int l=w[i+1].x1-w[i].x2;
+					pos.length=l;
+					pos.x=w[i].x2+l/2.0;
+					pos.y=w[i].y1;
+					v.push_back(pos);
+				}
+
+	}
+	//
+	for(int i=brk;i<w.size()-1;i++)
+	{
+
+				if(abs(w[i].x1-w[i+1].x1)<3)
+				{
+					int l=w[i+1].y1-w[i].y2;
+					pos.length=l;
+					pos.y=w[i].y2+l/2.0;
+					pos.x=w[i].x1;
+					v.push_back(pos);
+					
+				}
+
+	}
+
+	
+   sort(v.begin(),v.end(),lessmark);
+	for(int i=0;i<v.size();i++)
+	{
+		if(abs(v[i].length-tempL)<3)
+					{
+						count++;
+						tempL=v[i].length;
+					}
+					else 
+					{
+						if(max<count)
+						{
+						max=count;
+						maxL=tempL;
+						tempId=i;
+						}
+						count=1;
+						tempL=v[i].length;
+					}
+	}
+	flag=v.begin()+tempId;
+}
+
