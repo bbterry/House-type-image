@@ -220,7 +220,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		p2.y=(*ImgPro->iter).y2;
 		cvLine( img, p1, p2, CV_RGB(255,0,0), 2, CV_AA, 0 );
 	}
-
+	//output all circles
 	/*for(ImgPro->iter1=ImgPro->vec_begin1(); ImgPro->iter1!=ImgPro->vec_end1(); ++ImgPro->iter1)
 	{
 		CvPoint p;
@@ -241,7 +241,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		cvCircle(img, p, radius, CV_RGB(255,0,0),
                1, 8, 0 );
 	}*/
-	
+	//output the doors circles
 	for(ImgPro->iter1=ImgPro->flag-ImgPro->max; ImgPro->iter1!=ImgPro->flag; ++ImgPro->iter1)
 	{
 		CvPoint p;
@@ -275,7 +275,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 	}
     
    //
-	CvMemStorage* storage = cvCreateMemStorage(0);
+	/*CvMemStorage* storage = cvCreateMemStorage(0);
     CvSeq* lines = 0;
 	 IplImage* dst;
 	  dst = cvCreateImage( cvGetSize(ImgPro->getPreImage()), 8, 1 );
@@ -286,7 +286,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
         CvPoint* line = (CvPoint*)cvGetSeqElem(lines,i);
 		if(line[0].x!=line[1].x&&line[0].y!=line[1].y)
         cvLine( img, line[0], line[1], CV_RGB(255,0,0), 3, CV_AA, 0 );
-    }
+    }*/
 
 	cvNamedWindow("Result",1);
 	cvShowImage("Result",img);

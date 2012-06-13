@@ -443,6 +443,8 @@ void ImageProcess::processImage(const char * imgfile, const char * xmlfile)
 	//cvReleaseImage(&preImg);
 }
 
+
+//these functions are prepared for solving sort problems in a vector
   bool   lessmark(const   door&   s1,const   door&   s2)   
   {   
       return   s1.length   <   s2.length;   
@@ -467,13 +469,14 @@ void ImageProcess::findDoor(vector<line> w)
 {
 	int tempL=0;
 	int tempId=0,tempId2=0,tempId3=0;
-	int count=0;
-	int maxL=0;
-	door pos;
-	int brk=0;
 	max=0;
 	max2=0;
 	max3=0;
+	int count=0;
+	door pos;  //variable ,used to maintain gap information
+	int brk=0; //break point
+
+	//find the break point where the horizontal line is before and vertical line is after
 	vector<line>::iterator it;
 	for(it=w.begin();it!=w.end();it++)
 	{
@@ -481,12 +484,12 @@ void ImageProcess::findDoor(vector<line> w)
 			break;
 		brk++;
 	}
-	//sort
+	//sort every set of lines with the approximate same x,or y in order
 	int trace=0;
 	int i;
 	 for(i=0;i<brk-1;i++)
 	{
-		while(i<brk-1&&abs(w[i+1].y1-w[i].y1)<4)
+		while(i<brk-1&&abs(w[i+1].y1-w[i].y1)<DISTANCE_BLUR)
 		{trace++;
 		 i++;
 		}
@@ -496,17 +499,17 @@ void ImageProcess::findDoor(vector<line> w)
 
 	for(;i<w.size()-1;i++)
 	{
-		while(i<w.size()-1&&abs(w[i+1].x1-w[i].x1)<4)
+		while(i<w.size()-1&&abs(w[i+1].x1-w[i].x1)<DISTANCE_BLUR)
 		{trace++;
 		 i++;
 		}
 		sort(w.begin()+i-trace,w.begin()+i+1,lessY);
 		trace=0;
 	}
-	//
+	//get gap line size and store in a vector v.
 	for(int i=0;i<brk-1;i++)
 	{
-				if(abs(w[i].y1-w[i+1].y1)<4)
+				if(abs(w[i].y1-w[i+1].y1)<DISTANCE_BLUR)
 				{
 					int l=w[i+1].x1-w[i].x2;
 					pos.length=l;
@@ -520,7 +523,7 @@ void ImageProcess::findDoor(vector<line> w)
 	for(int i=brk;i<w.size()-1;i++)
 	{
 
-				if(abs(w[i].x1-w[i+1].x1)<4)
+				if(abs(w[i].x1-w[i+1].x1)<DISTANCE_BLUR)
 				{
 					int l=w[i+1].y1-w[i].y2;
 					pos.length=l;
@@ -532,11 +535,12 @@ void ImageProcess::findDoor(vector<line> w)
 
 	}
 
-	
+	//sort the gap line in order,in order to find door in a more convenient way.
    sort(v.begin(),v.end(),lessmark);
+   //find the doors ,whose quantity can be the max or next max.
 	for(int i=0;i<v.size();i++)
 	{
-		if(abs(v[i].length-tempL)<3)
+		if(abs(v[i].length-tempL)<DOOR_LENGTH_BLUR)
 					{
 						count++;
 						tempL=v[i].length;
@@ -551,7 +555,6 @@ void ImageProcess::findDoor(vector<line> w)
 						max3=max2;
 						max2=max;
 						max=count;
-						maxL=tempL;
 						tempId3=tempId2;
 						tempId2=tempId;
 						tempId=i;
@@ -574,6 +577,7 @@ void ImageProcess::findDoor(vector<line> w)
 						}
 					}
 	}
+    //remember the place of doors in vector.
 	flag=v.begin()+tempId;
 	if(max2>1)
 	flag2=v.begin()+tempId2;

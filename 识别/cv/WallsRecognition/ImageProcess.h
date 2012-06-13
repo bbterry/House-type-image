@@ -8,6 +8,8 @@
  #include <algorithm>
 #include <functional>
 
+#define DISTANCE_BLUR 4
+#define DOOR_LENGTH_BLUR 3
 typedef struct
 {
 	double x1,y1;
@@ -54,7 +56,7 @@ public:
 	vector<line>::iterator vec_begin() { return walls.begin();}
 	vector<line>::iterator vec_end() { return walls.end();}
 
-	//
+	//iterator for doors
 	vector<door>::const_iterator iter1;
 	vector<door>::iterator flag,flag2,flag3;
 	vector<door>::iterator vec_begin1() { return v.begin();}
