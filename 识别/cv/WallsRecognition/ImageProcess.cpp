@@ -466,11 +466,14 @@ void ImageProcess::processImage(const char * imgfile, const char * xmlfile)
 void ImageProcess::findDoor(vector<line> w)
 {
 	int tempL=0;
-	int tempId=0;
+	int tempId=0,tempId2=0,tempId3=0;
 	int count=0;
 	int maxL=0;
 	door pos;
 	int brk=0;
+	max=0;
+	max2=0;
+	max3=0;
 	vector<line>::iterator it;
 	for(it=w.begin();it!=w.end();it++)
 	{
@@ -483,7 +486,7 @@ void ImageProcess::findDoor(vector<line> w)
 	int i;
 	 for(i=0;i<brk-1;i++)
 	{
-		while(i<brk-1&&abs(w[i+1].y1-w[i].y1)<3)
+		while(i<brk-1&&abs(w[i+1].y1-w[i].y1)<4)
 		{trace++;
 		 i++;
 		}
@@ -493,7 +496,7 @@ void ImageProcess::findDoor(vector<line> w)
 
 	for(;i<w.size()-1;i++)
 	{
-		while(i<w.size()-1&&abs(w[i+1].x1-w[i].x1)<3)
+		while(i<w.size()-1&&abs(w[i+1].x1-w[i].x1)<4)
 		{trace++;
 		 i++;
 		}
@@ -503,7 +506,7 @@ void ImageProcess::findDoor(vector<line> w)
 	//
 	for(int i=0;i<brk-1;i++)
 	{
-				if(abs(w[i].y1-w[i+1].y1)<3)
+				if(abs(w[i].y1-w[i+1].y1)<4)
 				{
 					int l=w[i+1].x1-w[i].x2;
 					pos.length=l;
@@ -517,7 +520,7 @@ void ImageProcess::findDoor(vector<line> w)
 	for(int i=brk;i<w.size()-1;i++)
 	{
 
-				if(abs(w[i].x1-w[i+1].x1)<3)
+				if(abs(w[i].x1-w[i+1].x1)<4)
 				{
 					int l=w[i+1].y1-w[i].y2;
 					pos.length=l;
@@ -540,16 +543,42 @@ void ImageProcess::findDoor(vector<line> w)
 					}
 					else 
 					{
+						
+						if(tempL<60)
+						{
 						if(max<count)
 						{
+						max3=max2;
+						max2=max;
 						max=count;
 						maxL=tempL;
+						tempId3=tempId2;
+						tempId2=tempId;
 						tempId=i;
+						}
+						else if(max2<count)
+						{
+							max3=max2;
+							tempId3=tempId2;
+						max2=count;
+						tempId2=i;
+						}
+						else if(max3<count)
+						{
+							
+							max3=count;
+							tempId3=i;
 						}
 						count=1;
 						tempL=v[i].length;
+						}
 					}
 	}
 	flag=v.begin()+tempId;
+	if(max2>1)
+	flag2=v.begin()+tempId2;
+	if(max3>1)
+	flag3=v.begin()+tempId3;
+
 }
 

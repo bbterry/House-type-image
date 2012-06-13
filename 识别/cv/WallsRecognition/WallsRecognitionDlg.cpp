@@ -221,7 +221,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		cvLine( img, p1, p2, CV_RGB(255,0,0), 2, CV_AA, 0 );
 	}
 
-	for(ImgPro->iter1=ImgPro->vec_begin1(); ImgPro->iter1!=ImgPro->vec_end1(); ++ImgPro->iter1)
+	/*for(ImgPro->iter1=ImgPro->vec_begin1(); ImgPro->iter1!=ImgPro->vec_end1(); ++ImgPro->iter1)
 	{
 		CvPoint p;
 		p.x=(*ImgPro->iter1).x;
@@ -240,9 +240,9 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		else 
 		cvCircle(img, p, radius, CV_RGB(255,0,0),
                1, 8, 0 );
-	}
+	}*/
 	
-	/*for(ImgPro->iter1=ImgPro->flag-ImgPro->max; ImgPro->iter1!=ImgPro->flag; ++ImgPro->iter1)
+	for(ImgPro->iter1=ImgPro->flag-ImgPro->max; ImgPro->iter1!=ImgPro->flag; ++ImgPro->iter1)
 	{
 		CvPoint p;
 		p.x=(*ImgPro->iter1).x;
@@ -250,7 +250,29 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		int radius=(int)((*ImgPro->iter1).length/2.0);
 		cvCircle(img, p, radius, CV_RGB(255,0,0),
                1, 8, 0 );
-	}*/
+	}
+
+	if(ImgPro->max2>1)
+	for(ImgPro->iter1=ImgPro->flag2-ImgPro->max2; ImgPro->iter1!=ImgPro->flag2; ++ImgPro->iter1)
+	{
+		CvPoint p;
+		p.x=(*ImgPro->iter1).x;
+		p.y=(*ImgPro->iter1).y;
+		int radius=(int)((*ImgPro->iter1).length/2.0);
+		cvCircle(img, p, radius, CV_RGB(0,255,0),
+               1, 8, 0 );
+	}
+
+	if(ImgPro->max3>1)
+	for(ImgPro->iter1=ImgPro->flag3-ImgPro->max3; ImgPro->iter1!=ImgPro->flag3; ++ImgPro->iter1)
+	{
+		CvPoint p;
+		p.x=(*ImgPro->iter1).x;
+		p.y=(*ImgPro->iter1).y;
+		int radius=(int)((*ImgPro->iter1).length/2.0);
+		cvCircle(img, p, radius, CV_RGB(0,0,255),
+               1, 8, 0 );
+	}
     
    //
 	CvMemStorage* storage = cvCreateMemStorage(0);

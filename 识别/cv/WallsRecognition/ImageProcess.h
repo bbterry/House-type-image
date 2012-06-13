@@ -56,10 +56,10 @@ public:
 
 	//
 	vector<door>::const_iterator iter1;
-	vector<door>::iterator flag;
+	vector<door>::iterator flag,flag2,flag3;
 	vector<door>::iterator vec_begin1() { return v.begin();}
 	vector<door>::iterator vec_end1() { return v.end();}
-	int max;
+	int max,max2,max3;
 
 
 	ImageProcess();
