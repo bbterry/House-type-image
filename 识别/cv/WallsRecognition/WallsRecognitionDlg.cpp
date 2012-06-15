@@ -248,6 +248,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		p.x=(*ImgPro->iter1).x;
 		p.y=(*ImgPro->iter1).y;
 		int radius=(int)((*ImgPro->iter1).length/2.0);
+		if(radius>0)
 		cvCircle(img, p, radius, CV_RGB(255,0,0),
                1, 8, 0 );
 	}
@@ -259,6 +260,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		p.x=(*ImgPro->iter1).x;
 		p.y=(*ImgPro->iter1).y;
 		int radius=(int)((*ImgPro->iter1).length/2.0);
+		if(radius>0)
 		cvCircle(img, p, radius, CV_RGB(0,255,0),
                1, 8, 0 );
 	}
@@ -270,10 +272,26 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		p.x=(*ImgPro->iter1).x;
 		p.y=(*ImgPro->iter1).y;
 		int radius=(int)((*ImgPro->iter1).length/2.0);
+		if(radius>0)
 		cvCircle(img, p, radius, CV_RGB(0,0,255),
                1, 8, 0 );
 	}
     
+	int i=0;
+	//window
+	for(i=0;i<ImgPro->z.size();i++)
+	{
+		CvPoint p;
+		p.x=ImgPro->z[i].x;
+		p.y=ImgPro->z[i].y;
+		int radius=(int)(ImgPro->z[i].length/2.0);
+		if(radius>0)
+		cvCircle(img, p, radius, CV_RGB(255,255,0),
+               1, 8, 0 );
+	}
+	CString s1;
+	s1.Format(L"%d",i);
+	MessageBox(s1);
    //
 	/*CvMemStorage* storage = cvCreateMemStorage(0);
     CvSeq* lines = 0;
@@ -292,6 +310,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 	cvShowImage("Result",img);
 	cvNamedWindow("preImg",1);
 	cvShowImage("preImg",ImgPro->getPreImage());
+	cvSaveImage("Result.jpg",img);
 	cvWaitKey(0);
 	cvDestroyWindow("Result");
 	cvDestroyWindow("preImg");

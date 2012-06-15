@@ -8,7 +8,7 @@
  #include <algorithm>
 #include <functional>
 
-#define DISTANCE_BLUR 4
+#define DISTANCE_BLUR 6
 #define DOOR_LENGTH_BLUR 3
 typedef struct
 {
@@ -37,6 +37,7 @@ private:
 
 	vector<line> walls;
 	vector<door> v;
+	
 
 	uchar * pixel(IplImage * img, int x, int y)      //È¡ÏñËØÖµ
 	{ return (uchar*)(img->imageData+y*img->widthStep+x*img->nChannels);}
@@ -62,7 +63,7 @@ public:
 	vector<door>::iterator vec_begin1() { return v.begin();}
 	vector<door>::iterator vec_end1() { return v.end();}
 	int max,max2,max3;
-
+	vector<door> z;
 
 	ImageProcess();
 	~ImageProcess();
@@ -74,11 +75,13 @@ public:
 	//void setMinLineCount(int c) {minLineCount = c;}
 	void setMaxSeek(int s) {maxSeek = s;}
 	void setminLineLength(int l) {minLineLength = l;}
-	const IplImage * getSrcImage() { return (const IplImage * )src;}
+	 IplImage * getSrcImage() { return ( IplImage * )src;}
 	 IplImage * getPreImage() { return ( IplImage * )preImg;}
 
 	void processImage(const char * imgfile, const char * xmlfile);
-	void findDoor(vector<line> w);
+	void findDoorAndWindow(vector<line> w );
+	bool testWindH(int x,int y);
+	bool testWindV(int x,int y);
 };
 
 #endif

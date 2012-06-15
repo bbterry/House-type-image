@@ -437,7 +437,7 @@ void ImageProcess::processImage(const char * imgfile, const char * xmlfile)
 	//edge(preImg,edgeImg);
 	//recognition(edgeImg);
 	recognition(preImg);
-	findDoor(walls);
+	findDoorAndWindow(walls);
 	writeToXML(walls,xmlfile);
 	//cvReleaseImage(&edgeImg);
 	//cvReleaseImage(&preImg);
@@ -465,7 +465,7 @@ void ImageProcess::processImage(const char * imgfile, const char * xmlfile)
       return   s1.y1   <   s2.y1;   
   }
 
-void ImageProcess::findDoor(vector<line> w)
+void ImageProcess::findDoorAndWindow(vector<line> w )
 {
 	int tempL=0;
 	int tempId=0,tempId2=0,tempId3=0;
@@ -478,7 +478,7 @@ void ImageProcess::findDoor(vector<line> w)
 
 	//find the break point where the horizontal line is before and vertical line is after
 	vector<line>::iterator it;
-	for(it=w.begin();it!=w.end();it++)
+	for(it=walls.begin();it!=walls.end();it++)
 	{
 		if(it->y1!=it->y2)
 			break;
@@ -489,46 +489,52 @@ void ImageProcess::findDoor(vector<line> w)
 	int i;
 	 for(i=0;i<brk-1;i++)
 	{
-		while(i<brk-1&&abs(w[i+1].y1-w[i].y1)<DISTANCE_BLUR)
+		while(i<brk-1&&abs(walls[i+1].y1-walls[i].y1)<DISTANCE_BLUR)
 		{trace++;
 		 i++;
 		}
-		sort(w.begin()+i-trace,w.begin()+i+1,lessX);
+		sort(walls.begin()+i-trace,walls.begin()+i+1,lessX);
 		trace=0;
 	}
 
-	for(;i<w.size()-1;i++)
+	for(;i<walls.size()-1;i++)
 	{
-		while(i<w.size()-1&&abs(w[i+1].x1-w[i].x1)<DISTANCE_BLUR)
+		while(i<walls.size()-1&&abs(walls[i+1].x1-walls[i].x1)<DISTANCE_BLUR)
 		{trace++;
 		 i++;
 		}
-		sort(w.begin()+i-trace,w.begin()+i+1,lessY);
+		sort(walls.begin()+i-trace,walls.begin()+i+1,lessY);
 		trace=0;
 	}
 	//get gap line size and store in a vector v.
 	for(int i=0;i<brk-1;i++)
 	{
-				if(abs(w[i].y1-w[i+1].y1)<DISTANCE_BLUR)
+				if(abs(walls[i].y1-walls[i+1].y1)<DISTANCE_BLUR)
 				{
-					int l=w[i+1].x1-w[i].x2;
+					int l=walls[i+1].x1-walls[i].x2;
 					pos.length=l;
-					pos.x=w[i].x2+l/2.0;
-					pos.y=w[i].y1;
+					pos.x=walls[i].x2+l/2.0;
+					pos.y=walls[i].y1;
+					if(testWindH(pos.x,pos.y)/*&&pos.length<90*/)
+						z.push_back(pos);
+					else
 					v.push_back(pos);
 				}
 
 	}
 	//
-	for(int i=brk;i<w.size()-1;i++)
+	for(int i=brk;i<walls.size()-1;i++)
 	{
 
-				if(abs(w[i].x1-w[i+1].x1)<DISTANCE_BLUR)
+				if(abs(walls[i].x1-walls[i+1].x1)<DISTANCE_BLUR)
 				{
-					int l=w[i+1].y1-w[i].y2;
+					int l=walls[i+1].y1-walls[i].y2;
 					pos.length=l;
-					pos.y=w[i].y2+l/2.0;
-					pos.x=w[i].x1;
+					pos.y=walls[i].y2+l/2.0;
+					pos.x=walls[i].x1;
+					if(testWindV(pos.x,pos.y)/*&&pos.length<90*/)
+						z.push_back(pos);
+					else
 					v.push_back(pos);
 					
 				}
@@ -584,5 +590,65 @@ void ImageProcess::findDoor(vector<line> w)
 	if(max3>1)
 	flag3=v.begin()+tempId3;
 
+}
+
+bool ImageProcess::testWindH(int x,int y)
+{   
+	int j=0;
+	int sum=0;
+	int temp=128;
+	IplImage* img=cvCreateImage(cvGetSize(src), IPL_DEPTH_8U, 1);
+	cvCvtColor( src, img, CV_BGR2GRAY );
+	//	while(j<11)
+	//{
+	//	/*if(abs(temp-*pixel(img,x,y-5+j))>80)
+	//	{
+	//		sum++;
+	//	}*/
+	//	sum+=abs(temp-*pixel(img,x,y-5+j));
+	//	temp=*pixel(img,x,y-5+j);
+	//	j++;
+	//}
+	for(j=0;j<20;j++)
+	{
+		for(int i=0;i<10;i++)
+		{
+			sum+=255-*pixel(img,x-5+i,y-10+j);
+		}
+	}
+	if(sum>10*200*4)
+		return true;
+	else 
+		return false;
+}
+
+bool ImageProcess::testWindV(int x,int y)
+{
+	int j=0;
+	int sum=0;
+	int temp=128;
+	IplImage* img=cvCreateImage(cvGetSize(src), IPL_DEPTH_8U, 1);
+	cvCvtColor( src, img, CV_BGR2GRAY );
+	//	while(j<10)
+	//{
+	//	/*if(abs(temp-*pixel(img,x-5+j,y))>80)
+	//	{
+	//		sum++;
+	//	}*/
+	//	/*sum+=abs(temp-*pixel(img,x-5+j,y));
+	//	temp=*pixel(img,x-5+j,y);*/
+	//	j++;
+	//}
+	for(j=0;j<10;j++)
+	{
+		for(int i=0;i<20;i++)
+		{
+			sum+=255-*pixel(img,x-10+i,y-5+j);
+		}
+	}
+	if(sum>10*200*4)
+		return true;
+	else 
+		return false;
 }
 
