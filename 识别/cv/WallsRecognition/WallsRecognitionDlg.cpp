@@ -287,7 +287,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 		int radius=(int)(ImgPro->z[i].length/2.0);
 		if(radius>0)
 		cvCircle(img, p, radius, CV_RGB(255,255,0),
-               1, 8, 0 );
+               3, 8, 0 );
 	}
 	CString s1;
 	s1.Format(L"%d",i);

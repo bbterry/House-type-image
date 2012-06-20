@@ -515,7 +515,7 @@ void ImageProcess::findDoorAndWindow(vector<line> w )
 					pos.length=l;
 					pos.x=walls[i].x2+l/2.0;
 					pos.y=walls[i].y1;
-					if(testWindH(pos.x,pos.y)/*&&pos.length<90*/)
+					if(testWindH(pos.x,pos.y)&&pos.length<150)
 						z.push_back(pos);
 					else
 					v.push_back(pos);
@@ -532,7 +532,7 @@ void ImageProcess::findDoorAndWindow(vector<line> w )
 					pos.length=l;
 					pos.y=walls[i].y2+l/2.0;
 					pos.x=walls[i].x1;
-					if(testWindV(pos.x,pos.y)/*&&pos.length<90*/)
+					if(testWindV(pos.x,pos.y)&&pos.length<150)
 						z.push_back(pos);
 					else
 					v.push_back(pos);
