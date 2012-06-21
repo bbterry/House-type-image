@@ -80,8 +80,8 @@ public:
 
 	void processImage(const char * imgfile, const char * xmlfile);
 	void findDoorAndWindow(vector<line> w );
-	bool testWindH(int x,int y);
-	bool testWindV(int x,int y);
+	bool testWindH(double x,double y);
+	bool testWindV(double x,double y);
 };
 
 #endif

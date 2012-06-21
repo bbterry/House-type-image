@@ -592,23 +592,14 @@ void ImageProcess::findDoorAndWindow(vector<line> w )
 
 }
 
-bool ImageProcess::testWindH(int x,int y)
+bool ImageProcess::testWindH(double x,double y)
 {   
 	int j=0;
 	int sum=0;
 	int temp=128;
 	IplImage* img=cvCreateImage(cvGetSize(src), IPL_DEPTH_8U, 1);
 	cvCvtColor( src, img, CV_BGR2GRAY );
-	//	while(j<11)
-	//{
-	//	/*if(abs(temp-*pixel(img,x,y-5+j))>80)
-	//	{
-	//		sum++;
-	//	}*/
-	//	sum+=abs(temp-*pixel(img,x,y-5+j));
-	//	temp=*pixel(img,x,y-5+j);
-	//	j++;
-	//}
+	
 	for(j=0;j<20;j++)
 	{
 		for(int i=0;i<10;i++)
@@ -622,23 +613,14 @@ bool ImageProcess::testWindH(int x,int y)
 		return false;
 }
 
-bool ImageProcess::testWindV(int x,int y)
+bool ImageProcess::testWindV(double x,double y)
 {
 	int j=0;
 	int sum=0;
 	int temp=128;
 	IplImage* img=cvCreateImage(cvGetSize(src), IPL_DEPTH_8U, 1);
 	cvCvtColor( src, img, CV_BGR2GRAY );
-	//	while(j<10)
-	//{
-	//	/*if(abs(temp-*pixel(img,x-5+j,y))>80)
-	//	{
-	//		sum++;
-	//	}*/
-	//	/*sum+=abs(temp-*pixel(img,x-5+j,y));
-	//	temp=*pixel(img,x-5+j,y);*/
-	//	j++;
-	//}
+
 	for(j=0;j<10;j++)
 	{
 		for(int i=0;i<20;i++)

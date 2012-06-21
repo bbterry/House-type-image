@@ -311,6 +311,7 @@ void CWallsRecognitionDlg::OnBnClickedButton2()
 	cvNamedWindow("preImg",1);
 	cvShowImage("preImg",ImgPro->getPreImage());
 	cvSaveImage("Result.jpg",img);
+	cvSaveImage("Test.jpg",ImgPro->getPreImage());
 	cvWaitKey(0);
 	cvDestroyWindow("Result");
 	cvDestroyWindow("preImg");
