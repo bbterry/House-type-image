@@ -86,7 +86,7 @@ void ReadXmlFile(string& szFileName)
     ////Êä³ö
     cout << x->GetText()<< endl;
     cout << y->GetText() << endl;
-
+	cout<<atoi(x->GetText())<<endl;
 	cout<<"//"<<endl;
 
 	point = point->NextSiblingElement();

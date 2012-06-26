@@ -1,6 +1,8 @@
 #ifndef PROJECT_CALCULATION_H
 #define PROJECT_CALCULATION_H
 
+#include<iostream>
+#include<string.h>
 #include "tinyxml.h"
 #include "tinystr.h"
 #include <vector>
@@ -9,13 +11,13 @@ using namespace std;
 struct point
 {
 	int x,y;
-}
+};
 
 struct segment
 {
 	point p1;
 	point p2;
-}
+};
 
 class ProjectCalculation
 {
@@ -30,6 +32,6 @@ public:
 	~ProjectCalculation();
 
 	void calculate();
-}
+};
 
 #endif
